@@ -8,10 +8,10 @@ import financeiro.util.DAOFactory;
 
 public class ContaRN {
 
-	private ContaDAO contaDAO;
+	private final ContaDAO contaDAO;
 
 	public ContaRN() {
-		this.contaDAO = DAOFactory.criarContaDAo();
+		this.contaDAO = DAOFactory.criarContaDAO();
 	}
 
 	public List<Conta> listar(Usuario usuario) {

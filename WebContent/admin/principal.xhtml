@@ -3,50 +3,51 @@
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:sec="http://www.springframework.org/security/facelets/tags">
+      xmlns:sec="http://www.springframework.org/security/facelets/tags"
+      xmlns:p="http://primefaces.prime.com.tr/ui">
 
-<h:head>
-	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/>
-	<title>Área de Administração</title>
-</h:head>	
+	<ui:composition template="/templates/interna.xhtml">
+		<ui:define name="titulo">
+			Administração
+		</ui:define>
+		<ui:define name="corpo">
 
-<body>
-	<h1 align="center">Área de Administração</h1>
 	<h:form>
 		<h:messages />
-		<h:dataTable value="#{usuarioBean.lista}" var="usuario" rules="rows" cellpadding="5" >
+		
+		<p:dataTable  value="#{usuarioBean.lista}" var="usuario" rules="rows" cellpadding="5" >
 			<f:facet name="caption">
-				Exibição de usuários do sistema
+				
 			</f:facet>
 			<f:facet name="header">Listagem de Usuários</f:facet>
 			<br/>
 			<f:facet name="footer">Final da listagem</f:facet>
 			<br/>
-			<h:column>
+			<p:column>
 				<h:commandLink action="#{usuarioBean.ativar}">
 					<h:graphicImage library="imagens" name="usuario_ativo_#{usuario.ativo}.png" 
 						style="border:0"/>
 					<f:setPropertyActionListener target="#{usuarioBean.usuario}" value="#{usuario}"/>
 				</h:commandLink>		
-			</h:column>
-			<h:column>
+			</p:column>
+			<p:column>
 				<f:facet name="header">Código</f:facet>
 				<h:outputText value="#{usuario.codigo}" />
-			</h:column>
-			<h:column>
+			</p:column>
+			<p:column>
 				<h:graphicImage library="imagens" name="bandeira_#{usuario.idioma}.png" />	
-			</h:column>
-			<h:column>
+			</p:column>
+			<p:column>
 				<f:facet name="header">Nome</f:facet>
 				<h:outputText value="#{usuario.nome}" />
-			</h:column>
-			<h:column>
+			</p:column>
+			<p:column>
 				<f:facet name="header">e-Mail</f:facet>
 				<a href="mailto:#{usuario.email}">#{usuario.email}</a>
-			</h:column>
+			</p:column>
 			
 			
-			<h:column>
+			<p:column>
 				<f:facet name="header">Permissões</f:facet>
 				<h:commandLink action="#{usuarioBean.atribuiPermissao(usuario, 'ROLE_ADMINISTRADOR')}" 
 					title="Permissão Administrador" >
@@ -61,25 +62,25 @@
 					name="ROLE_USUARIO_VIP_#{usuario.permissao.contains('ROLE_USUARIO_VIP')}.png" 
 					style="border:0"/>
 				</h:commandLink>	
-			</h:column>
+			</p:column>
 		
-			<h:column>
+			<p:column>
 				<h:commandLink action="#{usuarioBean.editar}">
 					<h:graphicImage library="imagens" name="editar16.png" style="border:0" />
 					<f:setPropertyActionListener target="#{usuarioBean.usuario}" value="#{usuario}"/>
 					<f:setPropertyActionListener target="#{usuarioBean.destinoSalvar}" value="/admin/principal"/>
 				</h:commandLink>
-			</h:column>
+			</p:column>
 			
-			<h:column>
+			<p:column>
 				<h:commandLink action="#{usuarioBean.excluir}" 
 				onclick="if (!confirm('Corfirma a exclusão do usuário #{usuario.nome}?')) return false;">
 					<h:graphicImage library="imagens" name="excluir16.png" style="border:0" />
 					<f:setPropertyActionListener target="#{usuarioBean.usuario}" value="#{usuario}"/>
 				</h:commandLink>	
-			</h:column>
-		</h:dataTable>
+			</p:column>
+		</p:dataTable>
 	</h:form>
-</body>
-	
+		</ui:define>
+	</ui:composition>
 </html>

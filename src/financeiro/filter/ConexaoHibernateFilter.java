@@ -1,41 +1,51 @@
 package financeiro.filter;
 
-import javax.servlet.*;
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 
 import org.hibernate.SessionFactory;
 
 import financeiro.util.HibernateUtil;
 
-public class ConexaoHibernateFilter implements Filter{
-	
-	private SessionFactory sessionFactoy;
-	
-	public void init(FilterConfig config) throws ServletException{
-		this.sessionFactoy = HibernateUtil.getSessionFactory();
+public class ConexaoHibernateFilter implements Filter {
+
+	private SessionFactory sf;
+
+	public void init(FilterConfig config) throws ServletException {
+		this.sf = HibernateUtil.getSessionFactory();
 	}
-	
-	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse,
-			FilterChain chain) throws ServletException{
-		try{
-			this.sessionFactoy.getCurrentSession().beginTransaction();
+
+	public void destroy() {
+	}
+
+	public void doFilter(ServletRequest servletRequest,
+			ServletResponse servletResponse, FilterChain chain)
+			throws ServletException {
+
+		try {
+
+			this.sf.getCurrentSession().beginTransaction();
+
 			chain.doFilter(servletRequest, servletResponse);
-			this.sessionFactoy.getCurrentSession().getTransaction().commit();
-			this.sessionFactoy.getCurrentSession().close();
-			System.out.println("Operação de filtro realizada com sucesso! Transação comitada!");
-		}catch(Throwable e){
-		try{
-				if(this.sessionFactoy.getCurrentSession().getTransaction().isActive()){
-				this.sessionFactoy.getCurrentSession().getTransaction().rollback();
-				System.out.println("Erro ao realizar operação de filtragem, rollback iniciado!");
-			}	
-			}catch(Throwable t){
+
+			this.sf.getCurrentSession().getTransaction().commit();
+			System.out.println("Filtro comitou!");
+			this.sf.getCurrentSession().close();
+
+		} catch (Throwable ex) {
+			try {
+				if (this.sf.getCurrentSession().getTransaction().isActive()) {
+					this.sf.getCurrentSession().getTransaction().rollback();
+				}
+			} catch (Throwable t) {
 				t.printStackTrace();
-				System.out.println("O erro esta aqui");
 			}
-			throw new ServletException(e);
-			
+			throw new ServletException(ex);
 		}
 	}
-	
-	public void destroy(){}
+
 }

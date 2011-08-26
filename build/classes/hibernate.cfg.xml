@@ -26,6 +26,7 @@
         <property name="format_sql">true</property>
 
   <mapping class="financeiro.usuario.Usuario"/> 
-  <mapping class="financeiro.conta.Conta"/>    
+  <mapping class="financeiro.conta.Conta"/> 
+  <mapping class="financeiro.categoria.Categoria"/>    
     </session-factory>
 </hibernate-configuration>

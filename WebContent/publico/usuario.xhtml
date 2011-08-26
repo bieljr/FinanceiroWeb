@@ -3,13 +3,17 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:f="http://java.sun.com/jsf/core">
-<h:head>
-	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/>
-	<title>Cadastro de Usuaŕios</title>
-</h:head>	
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:sec="http://www.springframework.org/security/facelets/tags"
+    xmlns:p="http://primefaces.prime.com.tr/ui">
 
-	<h:body>	<h1>Cadastro de Usuários</h1>
+	<ui:composition template="/templates/interna.xhtml">
+		<ui:define name="titulo">
+			Cadastro de Usuários
+		</ui:define>
+		<ui:define name="corpo">
+
 		<h:form id="cadastro">
 			<h:messages/>
 			<h:inputHidden value="#{usuarioBean.usuario.codigo}"/>
@@ -24,16 +28,15 @@
 				</h:inputText>
 				
 				<h:outputLabel value="Data Nascimento:" for="data"/>
-				<h:inputText id="data" label="Data Nascimento" value="#{usuarioBean.usuario.nascimento}" size="10" maxlength="10" required="true">
-					<f:convertDateTime dateStyle="medium"/>
-				</h:inputText>
+				<p:calendar value="#{usuarioBean.usuario.nascimento}" required="true" size="10" pattern="dd/MM/yyyy"/>
+				
 				
 				<h:outputLabel value="Celular:" for="celular"/>
-				<h:inputText id="celular" label="Celular" value="#{usuarioBean.usuario.celular}" size="10"/>
+				<p:inputMask id="celular" label="Celular" value="#{usuarioBean.usuario.celular}" size="12" mask="(99)9999-9999"/>
 				
 				<h:outputLabel value="e-Mail:" for="email"/>
 				<h:panelGroup>
-					<h:inputText id="email" 
+					<h:inputText id="email"
 						label="e-Mail" 
 						value="#{usuarioBean.usuario.email}" 
 						size="50" maxlength="50" required="true" 
@@ -65,8 +68,24 @@
 				<h:outputLabel value="Confirma Senha:" for="confirmasenha"/>
 				<h:inputSecret id="confirmasenha" label="Confirma Senha" value="#{usuarioBean.confirmaSenha}" size="10" maxlength="10" required="true" redisplay="true"/>
 			</h:panelGrid>
-			
+			<h:panelGroup rendered="#{empty contextoBean.usuarioLogado}">
+				<fieldset>
+					<legend>Conta Inicial</legend>
+					<h:panelGrid columns="2">
+						<h:outputLabel value="Descrição: " for="descricao" />
+						<h:inputText id="descricao" value="#{usuarioBean.conta.descricao}" 
+								required="true" size="45" />
+						
+						<h:outputLabel value="Saldo Inicial: " for="saldoInicial" />
+						<h:inputText id="saldoInicial" value="#{usuarioBean.conta.saldoInicial}" size="10">
+							<f:convertNumber minFractionDigits="2"/>
+						</h:inputText>	
+					</h:panelGrid>
+				</fieldset>
+			</h:panelGroup>
+			<br />
 			<h:commandButton action="#{usuarioBean.salvar}" value="Salvar"/>
 		</h:form>
-	</h:body>
+	</ui:define>
+</ui:composition>	
 </html>
